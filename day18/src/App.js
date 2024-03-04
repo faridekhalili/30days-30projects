@@ -1,10 +1,10 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react' // 1. Import useRef and useEffect
 import DarkTheme from './components/DarkTheme'
 
 function App() {
   const [words, setWords] = useState([]);
-  const [input, setInput] = useState('');
+  const inputRef = useRef(''); // 2. Use useRef for input
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [currentFail, setCurrentFail] = useState(false);
@@ -27,27 +27,27 @@ function App() {
 
     setWords(newWords);
     setCurrentIndex(0);
-    setInput('');
+    inputRef.current = ''; // 3. Reset input using useRef
     setStartTime(Date.now());
     setMistakes(0);
     setWpm(0);
   }
 
   const handleChange = e => {
-    setInput(e.target.value);
+    inputRef.current = e.target.value; // 4. Update useRef value on change
   }
 
   const handleKeyDown = e => {
     if (e.keyCode === 13) {
-      if (words[currentIndex] === input) {
+      if (words[currentIndex] === inputRef.current) { // 5. Compare useRef value
         setCurrentIndex(currentIndex + 1);
-        setInput('');
+        inputRef.current = ''; // 6. Reset input using useRef
         setCurrentFail(false);
       } else {
         setCurrentFail(true);
         setMistakes(mistakes + 1);
       }
-      // if (currentIndex === words.length - 1) {
+// if (currentIndex === words.length - 1) {
         
       // }
       const endTime = Date.now();
@@ -57,6 +57,13 @@ function App() {
       setWpm(currWpm);
     }
   }
+
+  useEffect(() => { // 7. Synchronize input element with useRef value
+    const inputElement = document.querySelector('.footer input');
+    if (inputElement) {
+      inputElement.value = inputRef.current;
+    }
+  });
 
   return (
     <>
@@ -78,7 +85,7 @@ function App() {
               })}
       </div>
       <div className='footer'>
-        <input onChange={handleChange} value={input} onKeyDown={handleKeyDown}></input>
+        <input onChange={handleChange} onKeyDown={handleKeyDown}></input> {/* 8. Removed value prop */}
         <p>Your wpm: {wpm}</p>
         <p>Mistakes: {mistakes}</p>
         <button onClick={handleClick}>GO</button>
@@ -89,3 +96,4 @@ function App() {
 }
 
 export default App;
+
