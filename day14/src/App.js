@@ -1,6 +1,6 @@
 import './App.css';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react'; // 1. Import useRef and useEffect
 import Column from './components/Column';
 
 function App() {
@@ -36,12 +36,10 @@ function App() {
   
   const onDragEnd = (result) => {
     if (!result.destination) return;
-    // The draggable item was moved nowhere, so it come back at initial position
   
     const { source, destination } = result;
   
     if (source.droppableId === destination.droppableId) {
-      // The draggable item was moved within the same column
       const column = data.columns[source.droppableId];
       const newTaskIds = Array.from(column.taskIds);
       newTaskIds.splice(source.index, 1);
@@ -62,7 +60,6 @@ function App() {
   
       setData(newData);
     } else {
-      // The draggable item was moved to a different column
       const column_from = data.columns[source.droppableId];
       const newTaskIds_from = Array.from(column_from.taskIds);
       newTaskIds_from.splice(source.index, 1);
@@ -94,17 +91,21 @@ function App() {
     }
   };
 
-  const [input, setInput] = useState('');
+  // 2. Use useRef for handling input value to prevent re-renders
+  const inputRef = useRef('');
+
+  // 3. Remove useState for input management
 
   const handleChange = e => {
-    setInput(e.target.value);
+    // 4. Update useRef value directly without causing re-render
+    inputRef.current = e.target.value;
   }
 
   const handleClick = () => {
     const newTaskId = (data.columns['column-1'].taskIds.length + 1).toString();
     const newTask = {
       id: newTaskId,
-      content: input,
+      content: inputRef.current, // 6. Use current value of inputRef
     };
   
     const newData = {
@@ -123,13 +124,16 @@ function App() {
     };
   
     setData(newData);
-    setInput('');
+    // 7. Clear the input field directly
+    document.querySelector('.input input').value = '';
+    inputRef.current = ''; // 8. Reset useRef value
   };
 
   return (
     <>
       <div className='input'>
-        <input onChange={handleChange} value={input}></input>
+        {/* 9. Remove value and useState management from input */}
+        <input onChange={handleChange}></input> 
         <button onClick={handleClick}>X</button>
       </div>
       <div className='tasks'>
@@ -146,3 +150,4 @@ function App() {
 }
 
 export default App;
+
