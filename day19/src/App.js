@@ -25,7 +25,8 @@ function App() {
   return (
     <div className='container'>
       <div className='input-box'>
-        <input placeholder='Enter a City...' onChange={handleChange}></input> // 7. Controlled input with useRef
+        <input placeholder='Enter a City...' onChange={handleChange}></input> 
+        {/* 7. Controlled input with useRef */}
         <button onClick={handleClick}>X</button>
       </div>
       <p className='temp'>{data.main ? Math.round(data.main.temp - 273.15) + '°C' : ''}</p>
