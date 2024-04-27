@@ -1,10 +1,10 @@
 import './App.css';
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import DarkTheme from './components/DarkTheme'
 
 function App() {
   const [words, setWords] = useState([]);
-  const [input, setInput] = useState('');
+  const inputRef = useRef('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [startTime, setStartTime] = useState(0);
   const [currentFail, setCurrentFail] = useState(false);
@@ -27,21 +27,21 @@ function App() {
 
     setWords(newWords);
     setCurrentIndex(0);
-    setInput('');
+    inputRef.current = '';
     setStartTime(Date.now());
     setMistakes(0);
     setWpm(0);
   }
 
   const handleChange = e => {
-    setInput(e.target.value);
+    inputRef.current = e.target.value;
   }
 
   const handleKeyDown = e => {
     if (e.keyCode === 13) {
-      if (words[currentIndex] === input) {
+      if (words[currentIndex] === inputRef.current) {
         setCurrentIndex(currentIndex + 1);
-        setInput('');
+        inputRef.current = '';
         setCurrentFail(false);
       } else {
         setCurrentFail(true);
@@ -78,7 +78,7 @@ function App() {
               })}
       </div>
       <div className='footer'>
-        <input onChange={handleChange} value={input} onKeyDown={handleKeyDown}></input>
+      <input onChange={handleChange} onKeyDown={handleKeyDown}></input>
         <p>Your wpm: {wpm}</p>
         <p>Mistakes: {mistakes}</p>
         <button onClick={handleClick}>GO</button>
