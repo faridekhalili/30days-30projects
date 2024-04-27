@@ -1,12 +1,12 @@
 import './App.css';
-import {useState} from 'react'
+import React, {useState} from 'react'
 import DarkTheme from './components/DarkTheme'
 
-function Square({ handleClick, value}) {
+const Square = React.memo(({ handleClick, value }) => {
   return (
     <button className='square' onClick={handleClick}>{value}</button>
   )
-}
+});
 
 function App() {
   const [squares, setSquares] = useState(Array(9).fill(null));
