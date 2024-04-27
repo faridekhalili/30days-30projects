@@ -10,16 +10,17 @@ function Square({ handleClick, value}) {
 
 function App() {
   const [squares, setSquares] = useState(Array(9).fill(null));
-  const [bool, setBool] = useState(true);
 
   const handleClick = (i) => {
     if (calculateWinner() || squares[i]) {
       return ;
     }
-    squares[i] = bool ? 'X' : '0';
-    setSquares(squares);
-    setBool(!bool);
-  }
+    const squaresCopy = [...squares];
+    const xCount = squaresCopy.filter(val => val === 'X').length;
+    const oCount = squaresCopy.filter(val => val === 'O').length;
+    squaresCopy[i] = xCount === oCount ? 'X' : 'O';
+    setSquares(squaresCopy);
+  };
 
   function calculateWinner() {
     const winningPossibilities = [
@@ -43,17 +44,18 @@ function App() {
   }
 
   const handleRestart = () => {
-    setBool(true);
-    setSquares(Array(9).fill(null))
-  }
+    setSquares(Array(9).fill(null));
+  };
 
   const winner = calculateWinner();
+  const xCount = squares.filter(val => val === 'X').length;
+  const oCount = squares.filter(val => val === 'O').length;
   let status;
   if (winner) {
     status = `Winner: ${winner}`
-    } else {
-      status = `Next player: ${bool ? 'X' : 'O'}`
-    }
+  } else {
+    status = `Next player: ${xCount === oCount ? 'X' : 'O'}`;
+  }
 
   return (
     <div className='container'>
