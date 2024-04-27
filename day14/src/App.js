@@ -1,6 +1,6 @@
 import './App.css';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Column from './components/Column';
 
 function App() {
@@ -94,17 +94,17 @@ function App() {
     }
   };
 
-  const [input, setInput] = useState('');
+  const inputRef = useRef('');
 
   const handleChange = e => {
-    setInput(e.target.value);
+    inputRef.current = e.target.value;
   }
 
   const handleClick = () => {
     const newTaskId = (data.columns['column-1'].taskIds.length + 1).toString();
     const newTask = {
       id: newTaskId,
-      content: input,
+      content: inputRef.current,
     };
   
     const newData = {
@@ -123,13 +123,13 @@ function App() {
     };
   
     setData(newData);
-    setInput('');
+    inputRef.current = ''; 
   };
 
   return (
     <>
       <div className='input'>
-        <input onChange={handleChange} value={input}></input>
+      <input onChange={handleChange}></input> 
         <button onClick={handleClick}>X</button>
       </div>
       <div className='tasks'>
